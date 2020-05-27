@@ -1,0 +1,99 @@
+//old ver
+
+import java.util.ArrayList;
+
+public class CH8{
+    public static void main(String[] args) {
+        // System.out.println(fibonacci(40) + "");
+
+        //8.1
+        System.out.println("Count ways : " + countWays(5));
+    }
+
+    // static int fibonacci(int n){
+    //     if(n == 0)
+    //         return 0;
+    //     if(n == 1)
+    //         return 1;
+        
+    //     return fibonacci(n-1) + fibonacci(n-2);
+    // }
+
+    // static int fibonacci(int n){
+    //     return fibonacci(n, new int[n+1]);
+    // }
+
+    // static int fibonacci(int n, int[] memo){
+    //     if(n == 0 || n == 1)
+    //         return n;
+    //     if(memo[n] == 0){
+    //         memo[n] = fibonacci(n-1, memo) + fibonacci(n-2, memo);
+    //     }
+
+    //     return memo[n];
+    // }
+
+    public static int fibonacci(int n){
+        int[] memo = new int[n];
+        if(n == 0 || n == 1)
+            return n;
+        
+        memo[0] = 0;
+        memo[1] = 1;
+
+        for(int i=2; i<n; i++){
+            memo[i] = memo[i-1] + memo[i-2];
+        }
+        return memo[n-1] + memo[n-2];
+    }
+
+    //8.1
+    public static int countWays(int n){
+        
+        // if(n == 0)
+        //     return 1;
+        // if(n == 1 || n == 2)
+        //     return n;
+
+        // return countWays(n-3) + countWays(n-2) + countWays(n-1);
+
+        return countWays(n, new int[n]);
+    }
+
+    public static int countWays(int n, int[] memo){
+        memo[0] = 1;
+        memo[1] = 1;
+        memo[2] = 2;
+
+        for(int i=3; i<n; i++){
+            memo[i] = memo[i-1] + memo[i-2] + memo[i-3];
+        }
+        
+        return memo[n-1] + memo[n-2] + memo[n-3];
+    }
+
+    public static ArrayList<Point> getPath(boolean[][] maze){
+        if(maze == null || maze.length == 0) return null;
+        ArrayList<Point> path = new ArrayList<>();
+        if(getPath(maze, maze.length-1, maze[0].length-1, path)){
+            return path;
+        }
+        return null;
+    }
+
+    public boolean getPath(boolean[][] maze, int row, int col, ArrayList<Point> path){
+        if(row == 0 && col == 0)
+            return true;
+        
+        if(row < 0 || col < 0 || !maze[row][col])
+            return false;
+        //(row-1, col) 또는 (row, col-1) 까지 가능 경로가 존재한다면, (row,col) 에 갈 수 있다.
+        if(getPath(maze, row-1, col, path) || getPath(maze, row, col-1, path)){
+            Point p = new Point(row, col);
+            path.add(p);
+            return true;
+        } else{
+            return false;
+        }
+    }
+}
